@@ -22,6 +22,7 @@ import {UsuarioRepository} from '../repositories';
 import {AuthService} from '../services';
 import {service} from '@loopback/core'
 import axios from 'axios';
+import {configuracion} from '../config/config'
 export class UsuarioController {
   constructor(
     @repository(UsuarioRepository)
@@ -52,7 +53,7 @@ export class UsuarioController {
     const claveCifrada = this.servicioAuth.CifrarClave(clave);
     usuario.password = claveCifrada;
     let tipo = ''; //Definimos el tipo de comunicacion
-    tipo = 'sms';
+    tipo = configuracion.tipoComunicacion;
     let servicioWeb = '';
     let destino = '';
 
@@ -68,7 +69,7 @@ export class UsuarioController {
     const contenido = `Hola, ${usuario.nombre} ${usuario.apellidos} su contraseña en el portal es: ${clave}`
     axios({
       method: 'post',
-      url: 'http://localhost:5000/' + servicioWeb,
+      url: configuracion.baseURL + servicioWeb,
 
       headers: {
         'Accept': 'application/json',
